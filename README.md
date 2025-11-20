@@ -119,6 +119,51 @@
 
 ## 🔧 Engine Configuration
 
+### Custom & Local Engine Support ⭐
+
+The extension now fully supports custom and local chess engines! Perfect for:
+- **Maximum Privacy**: Your games never leave your computer
+- **Full Power**: Use Stockfish at maximum depth without limits
+- **Custom Engines**: Use specialized engines or configurations
+- **Zero Latency**: Instant analysis with local engines
+
+### Quick Start - Local Engine
+
+**Ready-to-use server implementations provided!**
+
+1. **Choose Your Stack:**
+   - Python + Flask (`examples/local_engine_server.py`)
+   - Node.js + Express (`examples/local_engine_server.js`)
+
+2. **Install Dependencies:**
+   ```bash
+   # Python
+   pip install flask flask-cors python-chess
+   
+   # Node.js
+   npm install express cors
+   ```
+
+3. **Download Stockfish:**
+   - Visit: https://stockfishchess.org/download/
+   - Extract and note the path
+
+4. **Run Server:**
+   ```bash
+   # Python
+   python examples/local_engine_server.py
+   
+   # Node.js
+   node examples/local_engine_server.js
+   ```
+
+5. **Configure Extension:**
+   - Open Settings → Engines tab
+   - Verify Local Engine URL: `http://localhost:8080/analyze`
+   - Save and select "Local Engine"
+
+**See [`examples/README.md`](examples/README.md) for complete setup guide!**
+
 ### Custom Engine Setup
 
 1. **Host your own chess engine API**
@@ -129,38 +174,21 @@
    - Lichess Format: `{ pvs: [{ moves: "e2e4", cp: 50 }] }`
    - ChessDB Format: `score:50,depth:20,pv:e2e4|e7e5`
    - POST API: Send `{ fen, depth }`, receive JSON
+5. **Save settings and select "Custom Engine"**
 
-### Local Engine (Privacy Mode)
+**See [`docs/ENGINES.md`](docs/ENGINES.md) for detailed engine documentation!**
 
-Run Stockfish on your own machine:
+### Example API Response
 
-```python
-# local_engine_server.py (example)
-from flask import Flask, request, jsonify
-import chess.engine
-
-app = Flask(__name__)
-engine = chess.engine.SimpleEngine.popen_uci("/path/to/stockfish")
-
-@app.route('/analyze', methods=['GET'])
-def analyze():
-    fen = request.args.get('fen')
-    depth = int(request.args.get('depth', 20))
-    
-    board = chess.Board(fen)
-    result = engine.analyse(board, chess.engine.Limit(depth=depth))
-    
-    return jsonify({
-        'bestmove': result['pv'][0].uci(),
-        'evaluation': result['score'].relative.score() / 100,
-        'continuation': ' '.join([m.uci() for m in result['pv']])
-    })
-
-if __name__ == '__main__':
-    app.run(port=8080)
+```json
+{
+  "bestmove": "e2e4",
+  "evaluation": 0.3,
+  "mate": null,
+  "continuation": "e2e4 e7e5 g1f3 b8c6",
+  "depth": 15
+}
 ```
-
-Then in settings: `http://localhost:8080/analyze`
 
 ## 📊 Engine Capabilities Reference
 
