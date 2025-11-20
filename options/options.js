@@ -11,7 +11,7 @@
     autoStart: true,
     autoDetectTime: true,
     visualFeedback: 'subtle',
-    defaultEngine: 'stockfish',
+    defaultEngine: 'chessdb',
     defaultMode: 'blitz',
     autoMoveEnabled: false,
     safetyMode: true,
